@@ -127,6 +127,3 @@ including loadingDialog, alertDialog, bottomDialog, listDialog and continuous ad
                   );
                 },
               ),
-
-This project is a starting point for a Dart
-[package](https://flutter.dev/developing-packages/),

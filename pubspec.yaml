@@ -2,7 +2,7 @@ name: multiple_dialog
 description: This is a magazine with multiple material designs
 version: 0.0.2
 author: Lans <wylans@163.com>
-homepage: https://github.com/Lans
+homepage: https://github.com/Lans/multiple_dialog
 
 environment:
   sdk: ">=2.1.0 <3.0.0"
