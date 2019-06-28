@@ -44,6 +44,12 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Center(
           child: Column(
             children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  "自定义dialog",
+                ),
+              ),
               RaisedButton(
                 elevation: 10,
                 child: Text("showAlertDialog"),
@@ -52,7 +58,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       context: context,
                       title: Text("标题"),
                       content: Text("我是内容"),
-                      semanticLabel: "AlertDialog扩展",
+                      semanticLabel: "AlerDialog扩展",
                       actions: <Widget>[
                         FlatButton(
                           child: Text("确认"),
@@ -70,32 +76,16 @@ class _MyHomePageState extends State<MyHomePage> {
                 },
               ),
               RaisedButton(
+                child: Text("showSimpleListDialog"),
                 elevation: 10,
-                child: Text(
-                  "showListDialog",
-                  style: _style(),
-                ),
                 onPressed: () {
-                  showListDialog<String>(
-                      title: Padding(
-                        child: Text("标题"),
-                        padding: EdgeInsets.all(4),
-                      ),
+                  showSimpleListDialog(
                       context: context,
-                      onConfirmCallBack: () {
-                        Navigator.pop(context);
-                      },
-                      onCancelCallBack: () {
-                        Navigator.pop(context);
-                      },
+                      simpleBuilder: SimpleBuilder(),
                       children: <Widget>[
-                        for (String str in list)
-                          Container(
-                            height: 20,
-                            child: Text(str),
-                          ),
+                        for (var i in list) Text(i),
                       ],
-                      onItemCallBack: (int index) {
+                      onItemCallBack: (index) {
                         print(list[index]);
                       });
                 },
@@ -107,41 +97,83 @@ class _MyHomePageState extends State<MyHomePage> {
                   style: _style(),
                 ),
                 onPressed: () {
-                  showLoadingDialog(
-                    context: context,
-                    backgroundColor: Colors.white,
-                    direction: Direction.Vertical,
-                  );
+                  showLoadingDialog(context: context);
                 },
               ),
               RaisedButton(
-                elevation: 10,
+                  elevation: 10,
+                  child: Text(
+                    "showBottomDialog",
+                    style: _style(),
+                  ),
+                  onPressed: () {
+                    showBottomDialog(
+                      context: context,
+                      title: Text("标题"),
+                      content: Container(child: Text("我是内容")),
+                      isScrollControlled: true,
+                      actions: <Widget>[
+                        FlatButton(
+                          child: Text("确认"),
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                        ),
+                        FlatButton(
+                          child: Text("取消"),
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                        ),
+                      ],
+                    );
+                  }),
+              RaisedButton(
                 child: Text(
-                  "showBottomDialog",
-                  style: _style(),
+                  "showCustomAlertDialog",
                 ),
+                elevation: 10,
                 onPressed: () {
-                  showBottomDialog(
+                  showCustomAlertDialog(
+                      context: context,
+                      dialogBuilder: DialogBuilder(
+                        simpleBuilder: SimpleBuilder(
+                          title: Text("标题"),
+                          content: SingleChildScrollView(
+                            child: ListBody(
+                              children: <Widget>[
+                                for (var i in list)
+                                  InkWell(
+                                    child: Text(i),
+                                    onTap: () {
+                                      print(i);
+                                    },
+                                  ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                      confirmWidget: Text("确认"),
+                      cancelWidget: Text("取消"),
+                      onConfirmCallBack: () {
+                        Navigator.pop(context);
+                      },
+                      onCancelCallBack: () {
+                        Navigator.pop(context);
+                      });
+                },
+              ),
+              RaisedButton(
+                child: Text(
+                  "showCustomDialog",
+                ),
+                elevation: 10,
+                onPressed: () {
+                  showCustomDialog(
                     context: context,
-                    title: Text("标题"),
-                    content: Container(
-                      child:
-                          Text("我是内容是您的拉回答阿里的哈里还打开了很大很大了洪都拉斯肯定会客户大老虎大老虎的拉黑hh"),
-                    ),
-                    actions: <Widget>[
-                      FlatButton(
-                        child: Text("确认"),
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                      ),
-                      FlatButton(
-                        child: Text("取消"),
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                      ),
-                    ],
+                    simpleBuilder: SimpleBuilder(),
+                    children: <Widget>[Text("自定义CustomDialog")],
                   );
                 },
               ),

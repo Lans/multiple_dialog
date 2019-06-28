@@ -6,7 +6,7 @@ including loadingDialog, alertDialog, bottomDialog, listDialog and continuous ad
 ## Getting Started
 
 ## How to use
-    multiple_dialog: ^0.0.1
+    multiple_dialog: ^0.0.3
     
     import 'package:multiple_dialog/multiple_dialog.dart';
 
@@ -52,83 +52,108 @@ including loadingDialog, alertDialog, bottomDialog, listDialog and continuous ad
                       ]);
                 },
               ),
-
-## 3. showListDialog
-
-     final list = [
-        "列表1",
-        "列表2",
-        "列表3",
-        "列表4",
-        "列表5",
-      ];
-    RaisedButton(
-                elevation: 10,
-                child: Text(
-                  "showListDialog",
-                  style: _style(),
-                ),
-                onPressed: () {
-                  showListDialog<String>(
-                      title: Padding(
-                        child: Text("标题"),
-                        padding: EdgeInsets.all(4),
-                      ),
+  
+## 3. showBottomDialog
+       
+      RaisedButton(
+                  elevation: 10,
+                  child: Text(
+                    "showBottomDialog",
+                    style: _style(),
+                  ),
+                  onPressed: () {
+                    showBottomDialog(
                       context: context,
+                      title: Text("标题"),
+                      content: Container(child: Text("我是内容")),
+                      isScrollControlled: true,
+                      actions: <Widget>[
+                        FlatButton(
+                          child: Text("确认"),
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                        ),
+                        FlatButton(
+                          child: Text("取消"),
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                        ),
+                      ],
+                    );
+                  }),
+
+## 4. showCustomAlertDialog
+     RaisedButton(
+                child: Text("showCustomAlertDialog",),
+                elevation: 10,
+                onPressed: () {
+                  showCustomAlertDialog(
+                      context: context,
+                      dialogBuilder: DialogBuilder(
+                        simpleBuilder: SimpleBuilder(
+                          title: Text("标题"),
+                          content: SingleChildScrollView(
+                            child: ListBody(
+                              children: <Widget>[
+                                for (var i in list)
+                                  InkWell(
+                                    child: Text(i),
+                                    onTap: () {
+                                      print(i);
+                                    },
+                                  ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                      confirmWidget: Text("确认"),
+                      cancelWidget: Text("取消"),
                       onConfirmCallBack: () {
                         Navigator.pop(context);
                       },
                       onCancelCallBack: () {
                         Navigator.pop(context);
-                      },
-                      children: <Widget>[
-                        for (String str in list)
-                          Container(
-                            height: 20,
-                            child: Text(str),
-                          ),
-                      ],
-                      onItemCallBack: (int index) {
-                        print(list[index]);
                       });
                 },
               ),
-         
-## 4. showBottomDialog
-       
-         RaisedButton(
-                elevation: 10,
+
+## 5. showCustomDialog
+     RaisedButton(
                 child: Text(
-                  "showBottomDialog",
-                  style: _style(),
+                  "showCustomDialog",
                 ),
+                elevation: 10,
                 onPressed: () {
-                  showBottomDialog(
+                  showCustomDialog(
                     context: context,
-                    title: Text("标题"),
-                    content: Container(
-                      child:
-                          Text("我是内容是您的拉回答阿里的哈里还打开了很大很大了洪都拉斯肯定会客户大老虎大老虎的拉黑hh"),
-                    ),
-                    actions: <Widget>[
-                      FlatButton(
-                        child: Text("确认"),
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                      ),
-                      FlatButton(
-                        child: Text("取消"),
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                      ),
-                    ],
+                    simpleBuilder: SimpleBuilder(),
+                    children: <Widget>[Text("自定义CustomDialog")],
                   );
                 },
               ),
 
-##LICENES
+## 6. SimpleListDialog
+     RaisedButton(
+                child: Text("showSimpleListDialog"),
+                elevation: 10,
+                onPressed: () {
+                  showSimpleListDialog(
+                      context: context,
+                      simpleBuilder: SimpleBuilder(),
+                      children: <Widget>[
+                        for (var i in list) Text(i),
+                      ],
+                      onItemCallBack: (index) {
+                        print(list[index]);
+                      });
+                },
+              ),
+
+#### If you want to customize the Dialog, you can override showCustomDialog or showCustomAlertDialog
+### LICENES
 
     Copyright 2019 Lans
     

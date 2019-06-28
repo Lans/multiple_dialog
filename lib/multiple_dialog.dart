@@ -39,14 +39,11 @@ void showAlertDialog({
   );
 }
 
-//带列表的AlertDialog
-void showListDialog<T>({
-  Widget title,
-  bool barrierDismissible = false,
+void showSimpleListDialog({
+  bool barrierDismissible = true,
   @required BuildContext context,
+  @required SimpleBuilder simpleBuilder,
   @required List<Widget> children,
-  @required VoidCallback onConfirmCallBack,
-  @required VoidCallback onCancelCallBack,
   @required Function(int index) onItemCallBack,
 }) {
   assert(context != null);
@@ -54,11 +51,9 @@ void showListDialog<T>({
     context: context,
     barrierDismissible: barrierDismissible,
     builder: (BuildContext context) {
-      return ListDialog<T>(
-        title: title,
+      return SimpleListDialog(
         children: children,
-        onConfirmCallBack: onConfirmCallBack,
-        onCancelCallBack: onCancelCallBack,
+        simpleBuilder: simpleBuilder,
         onItemCallBack: onItemCallBack,
       );
     },
@@ -66,8 +61,11 @@ void showListDialog<T>({
 }
 
 void showBottomDialog({
+  @required BuildContext context,
   Widget title,
   EdgeInsetsGeometry titlePadding,
+  EdgeInsetsGeometry contentPadding =
+      const EdgeInsets.fromLTRB(24.0, 20.0, 24.0, 24.0),
   TextStyle titleTextStyle,
   Widget content,
   TextStyle contentTextStyle,
@@ -76,24 +74,27 @@ void showBottomDialog({
   double elevation,
   String semanticLabel,
   ShapeBorder shape,
-  bool barrierDismissible = true,
-  @required BuildContext context,
+  bool isScrollControlled = true,
 }) {
   assert(context != null);
-  showDialog<void>(
+  showModalBottomSheet(
     context: context,
-    barrierDismissible: barrierDismissible,
     builder: (BuildContext context) {
       return BottomDialog(
         title: title,
-        titlePadding: titlePadding,
         titleTextStyle: titleTextStyle,
+        titlePadding: titlePadding,
         content: content,
         contentTextStyle: contentTextStyle,
-        shape: shape,
+        contentPadding: contentPadding,
+        semanticLabel: semanticLabel,
         actions: actions,
       );
     },
+    backgroundColor: backgroundColor,
+    elevation: elevation,
+    shape: shape,
+    isScrollControlled: isScrollControlled,
   );
 }
 
@@ -123,28 +124,141 @@ void showLoadingDialog({
   );
 }
 
-class ListDialog<T> extends StatelessWidget {
-  //底部按钮
-  final List<Widget> actions;
+void showCustomDialog({
+  @required BuildContext context,
+  bool barrierDismissible = true,
+  @required SimpleBuilder simpleBuilder,
+  @required List<Widget> children,
+}) {
+  assert(context != null);
+  showDialog<void>(
+    context: context,
+    barrierDismissible: barrierDismissible,
+    builder: (BuildContext context) {
+      return CustomDialog(
+        simpleBuilder: simpleBuilder,
+        children: children,
+      );
+    },
+  );
+}
 
-  final List<Widget> children;
+void showCustomAlertDialog({
+  @required BuildContext context,
+  bool barrierDismissible = true,
+  @required DialogBuilder dialogBuilder,
+  Widget confirmWidget,
+  Widget cancelWidget,
+  VoidCallback onConfirmCallBack,
+  VoidCallback onCancelCallBack,
+}) {
+  assert(context != null);
+  showDialog<void>(
+    context: context,
+    barrierDismissible: barrierDismissible,
+    builder: (BuildContext context) {
+      return CustomAlertDialog(
+        dialogBuilder: dialogBuilder,
+        confirmWidget: confirmWidget,
+        cancelWidget: cancelWidget,
+        onConfirmCallBack: onConfirmCallBack,
+        onCancelCallBack: onCancelCallBack,
+      );
+    },
+  );
+}
+
+class CustomAlertDialog extends StatelessWidget {
+  final DialogBuilder dialogBuilder;
+
+  final Widget confirmWidget;
+
+  final Widget cancelWidget;
 
   final VoidCallback onConfirmCallBack;
 
   final VoidCallback onCancelCallBack;
 
+  const CustomAlertDialog({
+    Key key,
+    this.confirmWidget,
+    this.cancelWidget,
+    @required this.dialogBuilder,
+    this.onConfirmCallBack,
+    this.onCancelCallBack,
+  })  : assert(dialogBuilder != null),
+        super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    assert(debugCheckHasMaterialLocalizations(context));
+
+    return AlertDialog(
+      title: dialogBuilder.simpleBuilder.title,
+      titlePadding: dialogBuilder.simpleBuilder.contentPadding,
+      titleTextStyle: dialogBuilder.titleTextStyle,
+      content: SingleChildScrollView(
+        child: dialogBuilder.simpleBuilder.content,
+      ),
+      contentPadding: dialogBuilder.simpleBuilder.contentPadding,
+      contentTextStyle: dialogBuilder.contentTextStyle,
+      backgroundColor: dialogBuilder.simpleBuilder.backgroundColor,
+      elevation: dialogBuilder.simpleBuilder.elevation,
+      semanticLabel: dialogBuilder.simpleBuilder.semanticLabel,
+      shape: dialogBuilder.simpleBuilder.shape,
+      actions: <Widget>[
+        FlatButton(
+          child: confirmWidget,
+          onPressed: onConfirmCallBack,
+        ),
+        FlatButton(
+          child: cancelWidget,
+          onPressed: onCancelCallBack,
+        ),
+      ],
+    );
+  }
+}
+
+class CustomDialog extends StatelessWidget {
+  final SimpleBuilder simpleBuilder;
+  final List<Widget> children;
+
+  const CustomDialog({
+    Key key,
+    @required this.simpleBuilder,
+    @required this.children,
+  })  : assert(simpleBuilder != null),
+        super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    assert(debugCheckHasMaterialLocalizations(context));
+    return SimpleDialog(
+      title: simpleBuilder.title,
+      titlePadding: simpleBuilder.contentPadding,
+      children: children,
+      contentPadding: simpleBuilder.contentPadding,
+      backgroundColor: simpleBuilder.backgroundColor,
+      elevation: simpleBuilder.elevation,
+      semanticLabel: simpleBuilder.semanticLabel,
+      shape: simpleBuilder.shape,
+    );
+  }
+}
+
+class SimpleListDialog extends StatelessWidget {
+  final List<Widget> children;
+
   final Function(int index) onItemCallBack;
 
-  final Widget title;
+  final SimpleBuilder simpleBuilder;
 
-  const ListDialog({
+  const SimpleListDialog({
     Key key,
     @required this.children,
-    @required this.onConfirmCallBack,
-    @required this.onCancelCallBack,
     @required this.onItemCallBack,
-    this.actions,
-    this.title,
+    this.simpleBuilder,
   })  : assert(children != null),
         super(key: key);
 
@@ -166,23 +280,9 @@ class ListDialog<T> extends StatelessWidget {
       }
     }
 
-    return AlertDialog(
-      title: title,
-      content: SingleChildScrollView(
-        child: ListBody(
-          children: body,
-        ),
-      ),
-      actions: <Widget>[
-        FlatButton(
-          child: Text("确认"),
-          onPressed: onConfirmCallBack,
-        ),
-        FlatButton(
-          child: Text("取消"),
-          onPressed: onCancelCallBack,
-        ),
-      ],
+    return CustomDialog(
+      simpleBuilder: simpleBuilder,
+      children: body,
     );
   }
 }
@@ -203,19 +303,8 @@ class BottomDialog extends StatelessWidget {
 
   final List<Widget> actions;
 
-  final Color backgroundColor;
-
-  final double elevation;
-
   //描述
   final String semanticLabel;
-
-  final ShapeBorder shape;
-
-  static const RoundedRectangleBorder _defaultDialogShape =
-      RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(4.0)));
-  static const double _defaultElevation = 24.0;
 
   const BottomDialog({
     Key key,
@@ -226,10 +315,7 @@ class BottomDialog extends StatelessWidget {
     this.contentPadding = const EdgeInsets.fromLTRB(24.0, 20.0, 24.0, 24.0),
     this.contentTextStyle,
     this.actions,
-    this.backgroundColor,
-    this.elevation,
     this.semanticLabel,
-    this.shape,
   }) : super(key: key);
 
   @override
@@ -293,30 +379,7 @@ class BottomDialog extends StatelessWidget {
         child: dialogChild,
       );
 
-    return Container(
-      alignment: Alignment.bottomCenter,
-      child: MediaQuery.removeViewInsets(
-        removeLeft: true,
-        removeTop: true,
-        removeRight: true,
-        removeBottom: true,
-        context: context,
-        child: ConstrainedBox(
-          constraints: BoxConstraints(
-              minWidth: MediaQuery.of(context).size.width,
-              minHeight: 50,
-              maxHeight: MediaQuery.of(context).size.height),
-          child: Material(
-            color: backgroundColor ??
-                dialogTheme.backgroundColor ??
-                Theme.of(context).dialogBackgroundColor,
-            shape: shape ?? dialogTheme.shape ?? _defaultDialogShape,
-            elevation: elevation ?? dialogTheme.elevation ?? _defaultElevation,
-            child: dialogChild,
-          ),
-        ),
-      ),
-    );
+    return dialogChild;
   }
 }
 
@@ -345,8 +408,8 @@ class LoadingDialog extends Dialog {
 
   static const double _defaultElevation = 24.0;
   static const RoundedRectangleBorder _defaultDialogShape =
-  RoundedRectangleBorder(
-      borderRadius: BorderRadius.all(Radius.circular(5.0)));
+      RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(5.0)));
 
   @override
   Widget build(BuildContext context) {
@@ -424,3 +487,112 @@ class LoadingDialog extends Dialog {
 }
 
 enum Direction { Vertical, Horizontal }
+
+///Contains all AlertDialog attributes
+class DialogBuilder {
+  /// Style for the text in the [title] of this [AlertDialog].
+  ///
+  /// If null, [DialogTheme.titleTextStyle] is used, if that's null, defaults to
+  /// [ThemeData.textTheme.title].
+  final TextStyle titleTextStyle;
+
+  /// Style for the text in the [content] of this [AlertDialog].
+  ///
+  /// If null, [DialogTheme.contentTextStyle] is used, if that's null, defaults
+  /// to [ThemeData.textTheme.subhead].
+  final TextStyle contentTextStyle;
+
+  /// The (optional) set of actions that are displayed at the bottom of the
+  /// dialog.
+  ///
+  /// Typically this is a list of [FlatButton] widgets.
+  ///
+  /// These widgets will be wrapped in a [ButtonBar], which introduces 8 pixels
+  /// of padding on each side.
+  ///
+  /// If the [title] is not null but the [content] _is_ null, then an extra 20
+  /// pixels of padding is added above the [ButtonBar] to separate the [title]
+  /// from the [actions].
+  final List<Widget> actions;
+
+  final SimpleBuilder simpleBuilder;
+
+  const DialogBuilder({
+    Key key,
+    this.titleTextStyle,
+    this.simpleBuilder,
+    this.contentTextStyle,
+    this.actions,
+  });
+}
+
+class SimpleBuilder {
+  /// The (optional) title of the dialog is displayed in a large font at the top
+  /// of the dialog.
+  ///
+  /// Typically a [Text] widget.
+  final Widget title;
+
+  /// Padding around the title.
+  ///
+  /// If there is no title, no padding will be provided. Otherwise, this padding
+  /// is used.
+  ///
+  /// This property defaults to providing 24 pixels on the top, left, and right
+  /// of the title. If the [content] is not null, then no bottom padding is
+  /// provided (but see [contentPadding]). If it _is_ null, then an extra 20
+  /// pixels of bottom padding is added to separate the [title] from the
+  /// [actions].
+  final EdgeInsetsGeometry titlePadding;
+
+  /// The (optional) content of the dialog is displayed in the center of the
+  /// dialog in a lighter font.
+  ///
+  /// Typically this is a [SingleChildScrollView] that contains the dialog's
+  /// message. As noted in the [AlertDialog] documentation, it's important
+  /// to use a [SingleChildScrollView] if there's any risk that the content
+  /// will not fit.
+  final Widget content;
+
+  /// Padding around the content.
+  ///
+  /// If there is no content, no padding will be provided. Otherwise, padding of
+  /// 20 pixels is provided above the content to separate the content from the
+  /// title, and padding of 24 pixels is provided on the left, right, and bottom
+  /// to separate the content from the other edges of the dialog.
+  final EdgeInsetsGeometry contentPadding;
+
+  /// {@macro flutter.material.dialog.backgroundColor}
+  final Color backgroundColor;
+
+  /// {@macro flutter.material.dialog.elevation}
+  /// {@macro flutter.material.material.elevation}
+  final double elevation;
+
+  /// The semantic label of the dialog used by accessibility frameworks to
+  /// announce screen transitions when the dialog is opened and closed.
+  ///
+  /// If this label is not provided, a semantic label will be inferred from the
+  /// [title] if it is not null.  If there is no title, the label will be taken
+  /// from [MaterialLocalizations.alertDialogLabel].
+  ///
+  /// See also:
+  ///
+  ///  * [SemanticsConfiguration.isRouteName], for a description of how this
+  ///    value is used.
+  final String semanticLabel;
+
+  /// {@macro flutter.material.dialog.shape}
+  final ShapeBorder shape;
+
+  const SimpleBuilder(
+      {Key key,
+      this.title,
+      this.titlePadding = const EdgeInsets.fromLTRB(24.0, 24.0, 24.0, 0.0),
+      this.content,
+      this.contentPadding = const EdgeInsets.fromLTRB(24.0, 20.0, 24.0, 24.0),
+      this.backgroundColor,
+      this.shape,
+      this.elevation,
+      this.semanticLabel});
+}
