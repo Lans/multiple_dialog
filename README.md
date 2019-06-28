@@ -6,7 +6,7 @@ including loadingDialog, alertDialog, bottomDialog, listDialog and continuous ad
 ## Getting Started
 
 ## How to use
-    multiple_dialog: ^0.0.3
+    multiple_dialog: ^0.0.4
     
     import 'package:multiple_dialog/multiple_dialog.dart';
 
