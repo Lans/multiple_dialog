@@ -60,7 +60,7 @@ void showSimpleListDialog({
   );
 }
 
-void showBottomDialog({
+void showBottomDialog<T>({
   @required BuildContext context,
   Widget title,
   EdgeInsetsGeometry titlePadding,
@@ -74,10 +74,10 @@ void showBottomDialog({
   double elevation,
   String semanticLabel,
   ShapeBorder shape,
-  bool isScrollControlled = true,
+  bool isScrollControlled = false,
 }) {
   assert(context != null);
-  showModalBottomSheet(
+  showModalBottomSheet<T>(
     context: context,
     builder: (BuildContext context) {
       return BottomDialog(

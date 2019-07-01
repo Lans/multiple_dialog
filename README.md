@@ -5,9 +5,18 @@ including loadingDialog, alertDialog, bottomDialog,
  listDialog and continuous addition。。。。。
  Then you can also add custom Dialog, if you have any Suggestions welcome to raise issues on github, if you think it is helpful to you, welcome start.
 
+ <img src="https://github.com/Lansmultiple_dialog/blob/master/enframe_2019-06-28-15-36-35.png" width=200 height=350 />,
+ <img src="https://github.com/Lans/multiple_dialog/blob/master/enframe_2019-06-28-15-36-44.png" width=200 height=350 />,
+ <img src="https://github.com/Lans/multiple_dialog/blob/master/enframe_2019-06-28-15-36-49.png" width=200 height=350 />,
+ <img src="https://github.com/Lans/multiple_dialog/blob/master/enframe_2019-06-28-15-36-52.png" width=200 height=350 />,
+
+[![build status](https://img.shields.io/travis/flutterchina/dio/vm.svg?style=flat-square)]()
+[![Pub](https://img.shields.io/pub/v/dio.svg?style=flat-square)](https://pub.dev/packages/multiple_dialog)
+[![support](https://img.shields.io/badge/platform-flutter%7Cdart%20vm-ff69b4.svg?style=flat-square)](https://github.com/Lans/multiple_dialog)
+
 ## Getting Started
 
-    multiple_dialog: ^0.1.0
+    multiple_dialog: ^0.1.1
     
     import 'package:multiple_dialog/multiple_dialog.dart';
 

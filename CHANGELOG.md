@@ -7,3 +7,5 @@
 ## [0.0.4] - add  showSimpleListDialog  and override CustomDialog
 
 ## [0.1.0] - fix bug and now release
+
+## [0.1.1] - add analysis_options.yaml

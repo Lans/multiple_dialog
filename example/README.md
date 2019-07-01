@@ -3,13 +3,6 @@
 This is a magazine with multiple material designs。
 including loadingDialog, alertDialog, bottomDialog, listDialog and continuous addition。。。。。
 
- <img src="https://github.com/Lansmultiple_dialog/blob/master/enframe_2019-06-28-15-36-35.png" width=200 height=350 />,
- <img src="https://github.com/Lans/multiple_dialog/blob/master/enframe_2019-06-28-15-36-44.png" width=200 height=350 />,
- <img src="https://github.com/Lans/multiple_dialog/blob/master/enframe_2019-06-28-15-36-49.png" width=200 height=350 />,
- <img src="https://github.com/Lans/multiple_dialog/blob/master/enframe_2019-06-28-15-36-52.png" width=200 height=350 />,
-
- 
-
 
 ## Getting Started
 
