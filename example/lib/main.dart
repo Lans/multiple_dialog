@@ -112,6 +112,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       title: Text("标题"),
                       content: Container(child: Text("我是内容")),
                       isScrollControlled: true,
+                      backgroundColor: Colors.deepOrange,
                       actions: <Widget>[
                         FlatButton(
                           child: Text("确认"),
