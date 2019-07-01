@@ -12,8 +12,7 @@ include: package:pedantic/analysis_options.yaml
 analyzer:
   exclude:
     - path/to/excluded/files/**
-  strong-mode:
-    implicit-dynamic: false
+    - lib/showBottomDialog.dart
   errors:
     # treat missing required parameters as a warning (not a hint)
     missing_required_param: warning
@@ -21,3 +20,4 @@ analyzer:
     missing_return: warning
     # allow having TODOs in the code
     todo: ignore
+

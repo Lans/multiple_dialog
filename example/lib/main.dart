@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:multiple_dialog/multiple_dialog.dart';
+import 'package:multiple_dialog/showBottomDialog.dart';
 
 void main() => runApp(MyApp());
 
@@ -107,7 +108,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     style: _style(),
                   ),
                   onPressed: () {
-                    showBottomDialog(
+                    showBottomDialog<String>(
                       context: context,
                       title: Text("标题"),
                       content: Container(child: Text("我是内容")),

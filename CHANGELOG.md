@@ -9,3 +9,5 @@
 ## [0.1.0] - fix bug and now release
 
 ## [0.1.1] - add analysis_options.yaml
+
+## [0.1.2] - change analysis_options.yaml
