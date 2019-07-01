@@ -17,25 +17,74 @@ void showBottomDialog({
   bool isScrollControlled = false,
 }) {
   assert(context != null);
-  showModalBottomSheet(
+  ShowBottom(
     context: context,
-    builder: (BuildContext context) {
-      return BottomDialog(
-        title: title,
-        titleTextStyle: titleTextStyle,
-        titlePadding: titlePadding,
-        content: content,
-        contentTextStyle: contentTextStyle,
-        contentPadding: contentPadding,
-        semanticLabel: semanticLabel,
-        actions: actions,
-      );
-    },
     backgroundColor: backgroundColor,
     elevation: elevation,
     shape: shape,
     isScrollControlled: isScrollControlled,
+    title: title,
+    titleTextStyle: titleTextStyle,
+    titlePadding: titlePadding,
+    content: content,
+    contentTextStyle: contentTextStyle,
+    contentPadding: contentPadding,
+    semanticLabel: semanticLabel,
+    actions: actions,
   );
+}
+
+class ShowBottom {
+  final BuildContext context;
+  final Widget title;
+  final EdgeInsetsGeometry titlePadding;
+  final EdgeInsetsGeometry contentPadding;
+  final TextStyle titleTextStyle;
+  final Widget content;
+  final TextStyle contentTextStyle;
+  final List<Widget> actions;
+  final Color backgroundColor;
+  final double elevation;
+  final String semanticLabel;
+  final ShapeBorder shape;
+  final bool isScrollControlled;
+
+  ShowBottom({
+    Key key,
+    this.context,
+    this.backgroundColor,
+    this.elevation,
+    this.shape,
+    this.isScrollControlled = false,
+    this.title,
+    this.titlePadding,
+    this.titleTextStyle,
+    this.content,
+    this.contentPadding = const EdgeInsets.fromLTRB(24.0, 20.0, 24.0, 24.0),
+    this.contentTextStyle,
+    this.actions,
+    this.semanticLabel,
+  }) {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return BottomDialog(
+          title: title,
+          titleTextStyle: titleTextStyle,
+          titlePadding: titlePadding,
+          content: content,
+          contentTextStyle: contentTextStyle,
+          contentPadding: contentPadding,
+          semanticLabel: semanticLabel,
+          actions: actions,
+        );
+      },
+      backgroundColor: backgroundColor,
+      elevation: elevation,
+      shape: shape,
+      isScrollControlled: isScrollControlled,
+    );
+  }
 }
 
 //底部弹出AlertDialog

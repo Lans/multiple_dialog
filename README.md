@@ -1,7 +1,7 @@
 # multiple_dialog
 
 This is a magazine with multiple material designs。
-including loadingDialog, alertDialog, bottomDialog,
+including loadingDialog, alertDialog,
  listDialog and continuous addition。。。。。
  Then you can also add custom Dialog, if you have any Suggestions welcome to raise issues on github, if you think it is helpful to you, welcome start.
 
@@ -11,7 +11,7 @@ including loadingDialog, alertDialog, bottomDialog,
 
 ## Getting Started
 
-    multiple_dialog: ^0.1.2
+    multiple_dialog: ^0.1.5
     
     import 'package:multiple_dialog/multiple_dialog.dart';
 

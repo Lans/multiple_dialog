@@ -60,8 +60,6 @@ void showSimpleListDialog({
   );
 }
 
-
-
 //loadingDialog
 void showLoadingDialog({
   BuildContext context,
