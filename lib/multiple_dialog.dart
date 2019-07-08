@@ -39,6 +39,32 @@ void showAlertDialog({
   );
 }
 
+void showLoadingDialog({
+  BuildContext context,
+  Color backgroundColor,
+  double elevation,
+  EdgeInsetsGeometry contentPadding,
+  ShapeBorder shape,
+  Direction direction,
+  bool barrierDismissible = true,
+}) {
+  assert(context != null);
+  assert(direction != null);
+  showDialog<void>(
+    context: context,
+    barrierDismissible: barrierDismissible,
+    builder: (BuildContext context) {
+      return LoadingDialog(
+        direction: direction,
+        elevation: elevation,
+        backgroundColor: backgroundColor,
+        shape: shape,
+      );
+    },
+  );
+}
+
+
 void showSimpleListDialog({
   bool barrierDismissible = true,
   @required BuildContext context,
@@ -60,33 +86,8 @@ void showSimpleListDialog({
   );
 }
 
-//loadingDialog
-void showLoadingDialog({
-  BuildContext context,
-  String message = "加载中...",
-  double height = 120,
-  double width = 120,
-  ShapeBorder shape,
-  Direction direction = Direction.Vertical,
-  bool barrierDismissible = true,
-}) {
-  assert(context != null);
-  showDialog<void>(
-    context: context,
-    barrierDismissible: barrierDismissible,
-    builder: (BuildContext context) {
-      return LoadingDialog(
-        message: message,
-        height: height,
-        width: width,
-        shape: shape,
-        direction: direction,
-      );
-    },
-  );
-}
 
-void showCustomDialog({
+void showCustomSimpleDialog({
   @required BuildContext context,
   bool barrierDismissible = true,
   @required SimpleBuilder simpleBuilder,
@@ -97,7 +98,7 @@ void showCustomDialog({
     context: context,
     barrierDismissible: barrierDismissible,
     builder: (BuildContext context) {
-      return CustomDialog(
+      return CustomSimpleDialog(
         simpleBuilder: simpleBuilder,
         children: children,
       );
@@ -129,6 +130,246 @@ void showCustomAlertDialog({
     },
   );
 }
+
+void showCustomDialog({
+  Key key,
+  BuildContext context,
+  bool barrierDismissible = true,
+  double gravity = 0,
+  Color backgroundColor,
+  double elevation,
+  Duration insetAnimationDuration = const Duration(milliseconds: 100),
+  Curve insetAnimationCurve = Curves.decelerate,
+  ShapeBorder shape,
+  Widget child,
+}) {
+  assert(context != null);
+  showDialog(
+      context: context,
+      barrierDismissible: barrierDismissible,
+      builder: (BuildContext context) {
+        return CustomDialog(
+          gravity: gravity,
+          backgroundColor: Colors.white,
+          elevation: 10,
+          insetAnimationDuration: insetAnimationDuration,
+          insetAnimationCurve: insetAnimationCurve,
+          shape: shape,
+          child: child,
+        );
+      });
+}
+
+//加载框
+class LoadingDialog extends Dialog {
+  const LoadingDialog({
+    Key key,
+    this.contentPadding,
+    this.backgroundColor,
+    this.elevation,
+    this.shape,
+    this.direction,
+  }) : super(key: key);
+
+  final EdgeInsetsGeometry contentPadding;
+  final Color backgroundColor;
+  final double elevation;
+  final ShapeBorder shape;
+  final Direction direction;
+
+  static const double _defaultElevation = 24.0;
+  static const RoundedRectangleBorder _defaultDialogShape =
+  RoundedRectangleBorder(
+      borderRadius: BorderRadius.all(Radius.circular(5.0)));
+
+  @override
+  Widget build(BuildContext context) {
+    final DialogTheme dialogTheme = DialogTheme.of(context);
+    return AnimatedPadding(
+      padding: MediaQuery.of(context).viewInsets +
+          const EdgeInsets.symmetric(horizontal: 40.0, vertical: 24.0),
+      duration: insetAnimationDuration,
+      curve: insetAnimationCurve,
+      child: MediaQuery.removeViewInsets(
+        removeLeft: true,
+        removeTop: true,
+        removeRight: true,
+        removeBottom: true,
+        context: context,
+        child: Center(
+          child: Material(
+            color: backgroundColor ??
+                dialogTheme.backgroundColor ??
+                Theme.of(context).dialogBackgroundColor,
+            elevation: elevation ?? dialogTheme.elevation ?? _defaultElevation,
+            shape: shape ?? dialogTheme.shape ?? _defaultDialogShape,
+            type: MaterialType.card,
+            child: SafeArea(
+              child: IntrinsicWidth(
+                child: Container(
+                  padding: contentPadding ??
+                      const EdgeInsets.fromLTRB(20, 10, 20, 10),
+                  child: _changeDirection(direction),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  //内容改变
+  Widget _changeDirection(Direction direction) {
+    if (direction.orientations == Orientations.Vertical) {
+      return SizedBox(
+        width: direction.width,
+        height: direction.height ?? direction.width + 20,
+        child: Column(
+          mainAxisAlignment:
+          direction.mainAxisAlignment ?? MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            CircularProgressIndicator(),
+            Padding(
+              padding: const EdgeInsets.only(top: 20),
+              child: Text(
+                direction.message,
+                style: direction.messageStyle,
+              ),
+            ),
+          ],
+        ),
+      );
+    } else {
+      return SizedBox(
+        width: direction.width,
+        height: direction.height,
+        child: Row(
+          mainAxisAlignment:
+          direction.mainAxisAlignment ?? MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.all(5.0),
+              child: CircularProgressIndicator(),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left: 20),
+              child: Text(
+                direction.message,
+                style: direction.messageStyle,
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+  }
+}
+
+class Direction {
+  final double width;
+  final double height;
+  final String message;
+  final TextStyle messageStyle;
+  final Orientations orientations;
+  final MainAxisAlignment mainAxisAlignment;
+
+  const Direction(
+      {Key key,
+        this.message,
+        this.messageStyle,
+        this.orientations,
+        this.width,
+        this.height,
+        this.mainAxisAlignment});
+}
+
+enum Orientations {
+  Vertical,
+  Horizontal,
+}
+
+
+class CustomDialog extends StatelessWidget {
+  /// Creates a dialog.
+  ///
+  /// Typically used in conjunction with [showDialog].
+  const CustomDialog({
+    Key key,
+    this.gravity,
+    this.backgroundColor,
+    this.elevation,
+    this.insetAnimationDuration,
+    this.insetAnimationCurve,
+    this.shape,
+    this.child,
+  }) : super(key: key);
+
+  final Color backgroundColor;
+
+  final double elevation;
+
+  final Duration insetAnimationDuration;
+
+  final Curve insetAnimationCurve;
+
+  final ShapeBorder shape;
+
+  final Widget child;
+
+  //-1~1
+  final double gravity;
+
+  static const RoundedRectangleBorder _defaultDialogShape =
+  RoundedRectangleBorder(
+      borderRadius: BorderRadius.all(Radius.circular(2.0)));
+  static const double _defaultElevation = 24.0;
+
+  @override
+  Widget build(BuildContext context) {
+    final DialogTheme dialogTheme = DialogTheme.of(context);
+    if (gravity < -1 || gravity > 1) {
+      throw new FormatException(
+          "Gravity must be greater than negative -1 and less than 1, or it won't show up on the page");
+    }
+
+    return AnimatedPadding(
+      padding: MediaQuery.of(context).viewInsets +
+          const EdgeInsets.symmetric(horizontal: 40.0, vertical: 0.0),
+      duration: insetAnimationDuration,
+      curve: insetAnimationCurve,
+      child: MediaQuery.removeViewInsets(
+        removeLeft: true,
+        removeTop: true,
+        removeRight: true,
+        removeBottom: true,
+        context: context,
+        child: Center(
+          child: Container(
+            alignment: Alignment(0, gravity),
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(minWidth: 280.0),
+              child: Material(
+                color: backgroundColor ??
+                    dialogTheme.backgroundColor ??
+                    Theme.of(context).dialogBackgroundColor,
+                elevation:
+                elevation ?? dialogTheme.elevation ?? _defaultElevation,
+                shape: shape ?? dialogTheme.shape ?? _defaultDialogShape,
+                type: MaterialType.card,
+                child: child,
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+
 
 class CustomAlertDialog extends StatelessWidget {
   final DialogBuilder dialogBuilder;
@@ -182,11 +423,11 @@ class CustomAlertDialog extends StatelessWidget {
   }
 }
 
-class CustomDialog extends StatelessWidget {
+class CustomSimpleDialog extends StatelessWidget {
   final SimpleBuilder simpleBuilder;
   final List<Widget> children;
 
-  const CustomDialog({
+  const CustomSimpleDialog({
     Key key,
     @required this.simpleBuilder,
     @required this.children,
@@ -242,117 +483,13 @@ class SimpleListDialog extends StatelessWidget {
       }
     }
 
-    return CustomDialog(
+    return CustomSimpleDialog(
       simpleBuilder: simpleBuilder,
       children: body,
     );
   }
 }
 
-//加载框
-class LoadingDialog extends Dialog {
-  const LoadingDialog({
-    Key key,
-    this.width,
-    this.height,
-    this.message,
-    this.backgroundColor,
-    this.elevation,
-    this.shape,
-    this.messageStyle,
-    this.direction,
-  }) : super(key: key);
-
-  final String message;
-  final TextStyle messageStyle;
-  final Color backgroundColor;
-  final double elevation;
-  final ShapeBorder shape;
-  final double height;
-  final double width;
-  final Direction direction;
-
-  static const double _defaultElevation = 24.0;
-  static const RoundedRectangleBorder _defaultDialogShape =
-      RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(5.0)));
-
-  @override
-  Widget build(BuildContext context) {
-    final DialogTheme dialogTheme = DialogTheme.of(context);
-    return AnimatedPadding(
-      padding: MediaQuery.of(context).viewInsets +
-          const EdgeInsets.symmetric(horizontal: 40.0, vertical: 24.0),
-      duration: insetAnimationDuration,
-      curve: insetAnimationCurve,
-      child: MediaQuery.removeViewInsets(
-        removeLeft: true,
-        removeTop: true,
-        removeRight: true,
-        removeBottom: true,
-        context: context,
-        child: Center(
-          child: Material(
-            color: backgroundColor ??
-                dialogTheme.backgroundColor ??
-                Theme.of(context).dialogBackgroundColor,
-            elevation: elevation ?? dialogTheme.elevation ?? _defaultElevation,
-            shape: shape ?? dialogTheme.shape ?? _defaultDialogShape,
-            type: MaterialType.card,
-            child: SafeArea(
-              child: SizedBox(
-                height: width,
-                width: height,
-                child: Container(
-                  child: changeDirection(),
-                ),
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget changeDirection() {
-    if (direction == Direction.Vertical) {
-      return Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          CircularProgressIndicator(),
-          Padding(
-            padding: const EdgeInsets.only(top: 20),
-            child: Text(
-              message,
-              style: messageStyle,
-            ),
-          ),
-        ],
-      );
-    } else {
-      return Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.all(5.0),
-            child: CircularProgressIndicator(),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(left: 20),
-            child: Text(
-              message,
-              style: messageStyle,
-            ),
-          ),
-        ],
-      );
-    }
-  }
-}
-
-enum Direction { Vertical, Horizontal }
 
 ///Contains all AlertDialog attributes
 class DialogBuilder {

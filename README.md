@@ -11,7 +11,7 @@ including loadingDialog, alertDialog,
 
 ## Getting Started
 
-    multiple_dialog: ^0.1.5
+    multiple_dialog: ^0.1.6
     
     import 'package:multiple_dialog/multiple_dialog.dart';
 
@@ -24,10 +24,14 @@ including loadingDialog, alertDialog,
                 ),
                 onPressed: () {
                   showLoadingDialog(
-                    context: context,
-                    backgroundColor: Colors.white,
-                    direction: Direction.Vertical,
-                  );
+                      context: context,
+                      direction: Direction(
+                        message: "加载中",
+                        messageStyle:TextStyle();
+                        orientations: Orientations.Horizontal,
+                        width: 120,
+                        height:120,
+                      ));
                 },
               ),
 ## 2. showAlertDialog
@@ -125,7 +129,7 @@ including loadingDialog, alertDialog,
                 },
               ),
 
-## 5. showCustomDialog
+## 5. showCustomSimpleDialog
      RaisedButton(
                 child: Text(
                   "showCustomDialog",
@@ -156,6 +160,15 @@ including loadingDialog, alertDialog,
                       });
                 },
               ),
+              
+## 7. CustomDialog
+##### gravity changes the position from top to bottom by (-1~1)
+ 
+        showCustomDialog(
+               context: context,
+               gravity: 0,
+               child: Text("showCustomDialog"));
+                            
 
 #### If you want to customize the Dialog, you can override showCustomDialog or showCustomAlertDialog
 ### LICENES

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:multiple_dialog/multiple_dialog.dart';
 import 'showBottomDialog.dart';
-
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
@@ -98,7 +97,13 @@ class _MyHomePageState extends State<MyHomePage> {
                   style: _style(),
                 ),
                 onPressed: () {
-                  showLoadingDialog(context: context);
+                  showLoadingDialog(
+                      context: context,
+                      direction: Direction(
+                        message: "加载中",
+                        orientations: Orientations.Horizontal,
+                        width: 120,
+                      ));
                 },
               ),
               RaisedButton(
@@ -168,16 +173,26 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
               RaisedButton(
                 child: Text(
-                  "showCustomDialog",
+                  "showCustomSimpleDialog",
                 ),
                 elevation: 10,
                 onPressed: () {
-                  showCustomDialog(
+                  showCustomSimpleDialog(
                     context: context,
                     simpleBuilder: SimpleBuilder(),
                     children: <Widget>[Text("自定义CustomDialog")],
                   );
                 },
+              ),
+              RaisedButton(
+                onPressed: () {
+                  showCustomDialog(
+                      context: context,
+                      gravity: 0,
+                      child: Text("showCustomDialog"));
+                },
+                child: Text("showCustomDialog"),
+                elevation: 10,
               ),
               RaisedButton(
                 elevation: 10,

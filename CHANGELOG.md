@@ -17,3 +17,5 @@
 ## [0.1.4] - Analysis
 
 ## [0.1.5] - remove showBottomDialog,if you want to use it , see example
+
+## [0.1.6] - change showCustomDialog to showCustomSimpleDialog ,add new showCustomDialog,change showLoadingDialog and more useful 

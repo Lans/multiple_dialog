@@ -29,4 +29,5 @@
 //  });
 //}
 
-//flutter packages pub publish
+//flutter packages pub publish 发布
+// flutter pub pub publish --dry-run  分析
